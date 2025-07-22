@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Health.Controllers
 {
+
     [Route("api/[controller]")]
+    [ApiController]
     public class DepartmentController(IDepartmentService departmentService) : ControllerBase
     {
         [HttpGet("fetch-departments")]
