@@ -39,6 +39,7 @@ Console.WriteLine($"Redis: {builder.Configuration.GetConnectionString("Redis")}"
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<RedisCacheService>();
 
 
@@ -58,7 +59,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-// Add controllers if you're using them
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -80,4 +81,4 @@ app.MapControllers();
 
 
 
-app.Run();
+app.Run(); 

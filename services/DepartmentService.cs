@@ -13,30 +13,51 @@ namespace Health.services
         }
 
         public async Task<Department?> GetDepartmentById(Guid id)
-        {
-            return await context.Departments
-                .FirstOrDefaultAsync(d => d.Id == id);
 
-        }
-
-        public async Task<Department?> CreateDepartment(Department department)
         {
-            if (await context.Departments.AnyAsync(d => d.Name == department.Name))
+            var department = await context.Departments.FindAsync(id);
+            if (department is null)
             {
                 return null;
             }
-            context.Departments.Add(department);
+            return department;
+        }
+
+        public async Task<Department?> CreateDepartment(DepartmentCreateDto departmentDto)
+        {
+            if (await context.Departments.AnyAsync(d => d.Name == departmentDto.Name))
+            {
+                return null; // Department with this name already exists
+            }
+
+            var department = new Department
+            {
+                Name = departmentDto.Name,
+                Description = departmentDto.Description
+               
+            };
+
+            await context.Departments.AddAsync(department);
             await context.SaveChangesAsync();
             return department;
         }
 
-        public async Task<Department?> UpdateDepartment(Department department)
+        public async Task<Department?> UpdateDepartment(Guid id, DepartmentCreateDto departmentDto)
         {
-            context.Departments.Update(department);
+            var existingDepartment = await context.Departments.FindAsync(id);
+            if (existingDepartment is null)
+            {
+                return null; // Department not found
+            }
+
+            existingDepartment.Name = departmentDto.Name;
+            existingDepartment.Description = departmentDto.Description;
+
+
+            context.Departments.Update(existingDepartment);
             await context.SaveChangesAsync();
-            return department;
+            return existingDepartment;
         }
-        
 
         public async Task<Department?> DeleteDepartment(Guid id)
         {
