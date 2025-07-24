@@ -18,6 +18,101 @@ namespace Health.services
 {
     public class AuthService(AppDbContext context, IConfiguration configuration, RedisCacheService _cache) : IAuthService
     {
+    public async Task<List<UserListDto>> GetAllUsersAsync()
+    {
+        return await context.Users
+            .Include(u => u.Department)
+            .Select(u => new UserListDto
+            {
+               Id = u.Id,
+               FullName = u.FullName,
+               Email = u.Email,
+               Role = u.Role,
+               CreatedAt = u.CreatedAt,
+               Department = u.Department != null ? new DepartmentDto 
+                { 
+                    Id = u.Department.Id,
+                    Name = u.Department.Name
+                } : null
+
+            })
+            .ToListAsync();
+    }
+
+    public async Task<UserListDto?> GetUserById(Guid id)
+    {
+            var user = await context.Users
+                .Include(u => u.Department)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        if (user is null)
+        {
+            return null;
+        }
+        return new UserListDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role,
+            CreatedAt = user.CreatedAt,
+            Department = user.Department != null ? new DepartmentDto 
+                { 
+                    Id = user.Department.Id,
+                    Name = user.Department.Name
+                } : null
+            
+        };
+    }
+
+    public async Task<TokenResponseDto?> LoginAsync(UserLoginDto request)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+            {
+                return null;
+            }
+
+            TokenResponseDto response = await CreateTokenResponse(user);
+
+            return response;
+        }
+
+        public async Task<UserListDto?> RegisterAsync(UserCreateDto request)
+        {
+            if (await context.Users.AnyAsync(u => u.Email == request.Email))
+            {
+                return null;
+            }
+
+            // Only verify department if DepartmentId is provided
+            if (request.DepartmentId.HasValue && 
+                !await context.Departments.AnyAsync(d => d.Id == request.DepartmentId))
+            {
+                throw new ArgumentException("Department does not exist");
+            }
+
+            
+
+            var user = new User
+            {
+                FullName = request.FullName,
+                Email = request.Email,
+                PasswordHash = new PasswordHasher<User>().HashPassword(new User(), request.Password),
+                Role = request.Role,
+                DepartmentId = request.DepartmentId.HasValue ? request.DepartmentId.Value : null
+            };
+
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
+            return await GetUserById(user.Id);
+        }
+
+
 
         private string CreateToken(User user)
         {
@@ -47,54 +142,6 @@ namespace Health.services
             return string.Empty;
         }
 
-        public async Task<TokenResponseDto?> LoginAsync(UserLoginDto request)
-        {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null)
-            {
-                return null;
-            }
-
-            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
-            {
-                return null;
-            }
-
-            TokenResponseDto response = await CreateTokenResponse(user);
-
-            return response;
-        }
-
-        private async Task<TokenResponseDto> CreateTokenResponse(User user)
-        {
-            return new TokenResponseDto
-            {
-                AccessToken = CreateToken(user),
-                RefreshToken = await GenerateAndSaveRefreshToken(user)
-            };
-        }
-
-        public async Task<User?> RegisterAsync(UserCreateDto request)
-        {
-            if (await context.Users.AnyAsync(u => u.Email == request.Email))
-            {
-                return null; // User already exists
-            }
-            var user = new User();
-            var hashedPassword = new PasswordHasher<User>()
-            .HashPassword(user, request.Password);
-
-            user.Email = request.Email;
-            user.FullName = request.FullName;
-            user.PasswordHash = hashedPassword;
-            user.Role = request.Role;
-
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-
-            return user;
-        }
-
 
         private static string GenerateRefreshToken()
         {
@@ -102,6 +149,15 @@ namespace Health.services
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
+        }
+
+                private async Task<TokenResponseDto> CreateTokenResponse(User user)
+        {
+            return new TokenResponseDto
+            {
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshToken(user)
+            };
         }
 
         private async Task<string> GenerateAndSaveRefreshToken(User user)
@@ -245,6 +301,6 @@ namespace Health.services
             return null;
         }
 
-        
+
     }
 }

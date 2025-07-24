@@ -11,6 +11,10 @@ namespace Health.Entities
 
         public string Role { get; set; } = string.Empty;
 
+        // Foreign key relationship
+        public Guid? DepartmentId { get; set; }
+        public Department? Department { get; set; } // Navigation property
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

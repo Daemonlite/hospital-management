@@ -5,8 +5,13 @@ namespace Health.services
 {
     public interface IAuthService
     {
-        Task<User?> RegisterAsync(UserCreateDto request);
+        Task<List<UserListDto>> GetAllUsersAsync();
+
+        Task<UserListDto?> GetUserById(Guid id);
+        
         Task<TokenResponseDto?> LoginAsync(UserLoginDto request);
+
+        Task<UserListDto?> RegisterAsync(UserCreateDto request);
 
         Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request);
 

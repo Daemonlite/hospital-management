@@ -18,8 +18,23 @@ namespace Health.Controllers
     [ApiController]
     public class AuthController(IAuthService authservice) : ControllerBase
     {
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserListDto>> GetUser(Guid id)
+        {
+            var user = await authservice.GetUserById(id);
+            return user == null ? NotFound() : Ok(user);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<UserListDto>>> GetAllUsersAsync()
+        {
+            return Ok(await authservice.GetAllUsersAsync());
+        }
+
+
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserCreateDto request)
+        public async Task<ActionResult<UserListDto>> Register(UserCreateDto request)
         {
             var user = await authservice.RegisterAsync(request);
 

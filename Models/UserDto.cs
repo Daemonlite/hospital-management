@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Health.Entities;
 
 namespace Health.Models
 {
-    
+
     public class UserCreateDto
     {
         [Required(ErrorMessage = "Full name is required")]
@@ -16,6 +17,8 @@ namespace Health.Models
 
         [Required(ErrorMessage = "Role is required")]
         public string Role { get; set; } = string.Empty;
+        
+        public Guid? DepartmentId { get; set; }
     }
 
     public class UserUpdateDto
@@ -40,11 +43,25 @@ namespace Health.Models
 
     public class UserListDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public DepartmentDto? Department { get; set; }
         public DateTime CreatedAt { get; set; }
+    }
+
+    public class DepartmentDto
+    {
+        
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+
+        // public static implicit operator DepartmentDto(DepartmentDto v)
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 
     public class ResetPasswordDto

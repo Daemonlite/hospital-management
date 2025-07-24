@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Health.Entities;
 
 namespace Health.Models
 {
     public class DepartmentCreateDto
     {
+        
         [Required(ErrorMessage = "Department name is required")]
         public string Name { get; set; } = string.Empty;
 
@@ -11,9 +13,11 @@ namespace Health.Models
         public string Description { get; set; } = string.Empty;
     }
 
-    public class DepartmentListDto
+    public class DepartmentListDto(Department? department)
     {
-        public Guid Id { get; set; }
+        private Department? department = department;
+
+        public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
