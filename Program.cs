@@ -40,6 +40,7 @@ Console.WriteLine($"Redis: {builder.Configuration.GetConnectionString("Redis")}"
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IPatientsService, PatientsService>();
 builder.Services.AddScoped<RedisCacheService>();
 
 

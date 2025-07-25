@@ -89,13 +89,17 @@ namespace Health.services
                 return null;
             }
 
-            // Only verify department if DepartmentId is provided
-            if (request.DepartmentId.HasValue && 
-                !await context.Departments.AnyAsync(d => d.Id == request.DepartmentId))
+            if (await context.Departments.AnyAsync(d => d.Id != request.DepartmentId))
             {
                 throw new ArgumentException("Department does not exist");
             }
 
+            // Only verify department if DepartmentId is provided
+                if (request.DepartmentId.HasValue &&
+                    !await context.Departments.AnyAsync(d => d.Id == request.DepartmentId))
+                {
+                    throw new ArgumentException("Department does not exist");
+                }
             
 
             var user = new User

@@ -1,8 +1,9 @@
+
 namespace Health.Entities
 {
     public class Patients
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
 
         public DateOnly DOB { get; set; }
@@ -14,4 +15,5 @@ namespace Health.Entities
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
+
 }
