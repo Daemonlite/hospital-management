@@ -7,20 +7,35 @@ namespace Health.services
 {
     public class DepartmentService(AppDbContext context) : IDepartmentService
     {
-        public async Task<List<Department>> GetDepartments()
+        public async Task<List<Department?>> GetDepartments()
         {
-            return await context.Departments.ToListAsync();
+            var departments = await context.Departments.ToListAsync();
+            return [.. departments];
         }
 
-        public async Task<Department?> GetDepartmentById(Guid id)
-
+        public async Task<DepartmentDto?> GetDepartmentById(Guid id)
         {
-            var department = await context.Departments.FindAsync(id);
+            var department = await context.Departments
+                .Include(d => d.Users)  // Plural
+                .FirstOrDefaultAsync(d => d.Id == id);
+            
             if (department is null)
             {
                 return null;
             }
-            return department;
+
+            return new DepartmentDto
+            {
+                Id = department.Id,
+                Name = department.Name,
+                Description = department.Description,
+                Users = department.Users?.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                }).ToList() ?? [] // If null, set to empty list
+            };
         }
 
         public async Task<Department?> CreateDepartment(DepartmentCreateDto departmentDto)
@@ -70,5 +85,6 @@ namespace Health.services
             await context.SaveChangesAsync();
             return department;
         }
+
     }
 }

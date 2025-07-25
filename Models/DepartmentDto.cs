@@ -13,14 +13,14 @@ namespace Health.Models
         public string Description { get; set; } = string.Empty;
     }
 
-    public class DepartmentListDto(Department? department)
+    public class DepartmentListDto()
     {
-        private Department? department = department;
 
-        public Guid Id { get; set; } 
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public User? Users { get; set; }
     }
 }

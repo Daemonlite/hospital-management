@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Health.Entities;
 
 namespace Health.Models
@@ -51,18 +52,26 @@ namespace Health.Models
         public DateTime CreatedAt { get; set; }
     }
 
-    public class DepartmentDto
+
+    public class UserDto
     {
+
+        public Guid Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
         
+        
+    }
+
+   public class DepartmentDto
+    {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-
-        // public static implicit operator DepartmentDto(DepartmentDto v)
-        // {
-        //     throw new NotImplementedException();
-        // }
+        public List<UserDto> Users { get; set; } = [];
     }
+
+
 
     public class ResetPasswordDto
     {

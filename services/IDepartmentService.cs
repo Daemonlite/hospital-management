@@ -5,8 +5,8 @@ namespace Health.services
 {
     public interface IDepartmentService
     {
-        Task<List<Department>> GetDepartments();
-        Task<Department?> GetDepartmentById(Guid id);
+        Task<List<Department?>> GetDepartments();
+        Task<DepartmentDto?> GetDepartmentById(Guid id);
         Task<Department?> CreateDepartment(DepartmentCreateDto department);
         Task<Department?> UpdateDepartment( Guid id,DepartmentCreateDto department);
         Task<Department?> DeleteDepartment(Guid id);

@@ -12,17 +12,17 @@ namespace Health.Controllers
     [ApiController]
     public class DepartmentController(IDepartmentService departmentService) : ControllerBase
     {
-        [HttpGet("fetch-departments")]
+        [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<Department>>> GetDepartments()
+        public async Task<ActionResult<List<Department?>>> GetDepartments()
         {
             var departments = await departmentService.GetDepartments();
             return Ok(departments);
         }
 
-        [HttpGet("fetch-department/{id}")]
+        [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Department?>> GetDepartmentById(Guid id)
+        public async Task<ActionResult<DepartmentDto?>> GetDepartmentById(Guid id)
         {
             var department = await departmentService.GetDepartmentById(id);
             if (department == null)
@@ -32,7 +32,7 @@ namespace Health.Controllers
             return Ok(department);
         }
 
-        [HttpPost("create-department")]
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult<Department?>> CreateDepartment(DepartmentCreateDto department)
         {
@@ -45,7 +45,7 @@ namespace Health.Controllers
             return Ok(departments);
         }
 
-        [HttpPut("update-department/{id}")]
+        [HttpPut("{id}")]
         [Authorize]
         public async Task<ActionResult<Department?>> UpdateDepartment(Guid id, DepartmentCreateDto department)
         {
@@ -57,7 +57,7 @@ namespace Health.Controllers
             return Ok(departments);
         }
 
-        [HttpDelete("delete-department/{id}")]
+        [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult?> DeleteDepartment(Guid id)
 
