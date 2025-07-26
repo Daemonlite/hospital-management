@@ -8,10 +8,9 @@ using Health.services;
 
 namespace Health.services
 {
-    public class FileUploadService(AppDbContext _context, IWebHostEnvironment _env)
+    public class FileUploadService(AppDbContext _context, IWebHostEnvironment _env, IConfiguration configuration)
     {
-
-        public async Task<PatientsFiles> UploadPatientsFileAsync(Guid patientId, IFormFile file)
+        public async Task<PatientsFiles> UploadPatientsFileAsync(Guid patientId, IFormFile file, string description)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("Invalid file");
@@ -30,13 +29,20 @@ namespace Health.services
                 await file.CopyToAsync(stream);
             }
 
+            // Get the base URL from configuration or request
+            var baseUrl = configuration["BaseUrl"] ?? "http://localhost:5104";
+            
+            // Create absolute URL
+            var absoluteUrl = $"{baseUrl}/uploads/patients/{patientId}/{fileName}";
+
             var patientsFile = new PatientsFiles
             {
                 PatientId = user.Id,
                 FileName = file.FileName,
-                FilePath = $"/uploads/patients/{patientId}/{fileName}",
+                FilePath = absoluteUrl, // Store absolute URL instead of relative path
                 ContentType = file.ContentType,
-                FileSize = file.Length
+                FileSize = file.Length,
+                Description = description
             };
 
             _context.PatientsFiles.Add(patientsFile);
@@ -44,7 +50,5 @@ namespace Health.services
 
             return patientsFile;
         }
-
-
     }
 }

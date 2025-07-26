@@ -18,9 +18,7 @@ namespace Health.services
             {
                 Id = f.Id,
                 Description = f.Description,
-                FileName = f.FileName,
                 FilePath = f.FilePath,
-                ContentType = f.ContentType,
                 FileSize = f.FileSize,
                 UploadedAt = f.UploadedAt,
                 Patient = f.Patient != null ? new Patients
@@ -58,7 +56,7 @@ namespace Health.services
 
         public async Task<PatientsFiles>AddPatientFile(PatientFilesDto patientFile)
         {
-            var upload = await fileUploadService.UploadPatientsFileAsync(patientId: patientFile.PatientId, file: patientFile.File);
+            var upload = await fileUploadService.UploadPatientsFileAsync(patientId: patientFile.PatientId, file: patientFile.File, description: patientFile.Description);
             
 
             return upload;

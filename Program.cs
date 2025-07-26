@@ -12,6 +12,7 @@ DotNetEnv.Env.Load();
 // Add services to the container.
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 
 // Add DbContext first
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -22,7 +23,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
     options.InstanceName = "HealthAppCache:";
-    
+
     // Add connection resilience
     options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
     {
@@ -33,6 +34,8 @@ builder.Services.AddStackExchangeRedisCache(options =>
         SyncTimeout = 5000
     };
 });
+
+
 
 Console.WriteLine("=== Connection Strings ===");
 Console.WriteLine($"DefaultConnection: {builder.Configuration.GetConnectionString("DefaultConnection")}");
@@ -75,14 +78,15 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 // Authentication & Authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+ 
 
 
 app.Run(); 
