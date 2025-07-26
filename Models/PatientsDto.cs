@@ -3,6 +3,7 @@ namespace Health.Models
 {
     public class PatientsDto
     {
+        public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
 
         public DateOnly DOB { get; set; }

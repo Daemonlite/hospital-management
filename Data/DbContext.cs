@@ -8,6 +8,8 @@ namespace Health.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Patients> Patients { get; set; }
         public DbSet<Department> Departments { get; set; }
+        
+        public DbSet<PatientsFiles> PatientsFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,9 +20,8 @@ namespace Health.Data
                 .HasForeignKey(u => u.DepartmentId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict); // Or Cascade as needed
-                
 
-            // Additional configurations can go here
+
             base.OnModelCreating(modelBuilder);
         }
 

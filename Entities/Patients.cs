@@ -1,4 +1,6 @@
 
+using Health.Models;
+
 namespace Health.Entities
 {
     public class Patients
@@ -11,9 +13,12 @@ namespace Health.Entities
         public string Gender { get; set; } = string.Empty;
         public string ContactInfo { get; set; } = string.Empty;
 
+        
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
     }
 
 }

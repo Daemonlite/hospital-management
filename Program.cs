@@ -6,6 +6,7 @@ using System.Text;
 using Health.services;
 using Health.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 // Add services to the container.
@@ -37,11 +38,13 @@ Console.WriteLine("=== Connection Strings ===");
 Console.WriteLine($"DefaultConnection: {builder.Configuration.GetConnectionString("DefaultConnection")}");
 Console.WriteLine($"Redis: {builder.Configuration.GetConnectionString("Redis")}");
 
-
+builder.Services.AddScoped<RedisCacheService>();
+builder.Services.AddScoped<FileUploadService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPatientsService, PatientsService>();
-builder.Services.AddScoped<RedisCacheService>();
+builder.Services.AddScoped<IPatientFilesService, PatientFileService>();
+
 
 
 // Add authentication

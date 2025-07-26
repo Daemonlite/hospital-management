@@ -25,14 +25,6 @@ namespace Health.Entities
 
         public DateTime RefreshTokenExpiryTime { get; set; }
 
-        public static implicit operator User(UserListDto v)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static implicit operator User(List<UserDto> v)
-        {
-            throw new NotImplementedException();
-        }
+        public List<PatientsFiles> Files { get; set; } = [];
     }
 }
