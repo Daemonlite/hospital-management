@@ -18,7 +18,7 @@ public class PatientsService(AppDbContext _context) : IPatientsService
         return await _context.Patients.FindAsync(id);
     }
 
-    public async Task<Patients?> AddPatient(PatientsDto patient)
+    public async Task<Patients?> AddPatient(PatientsCreateDto patient)
     {
         if (await _context.Patients.AnyAsync(p => p.ContactInfo == patient.ContactInfo))
         {
@@ -30,7 +30,9 @@ public class PatientsService(AppDbContext _context) : IPatientsService
             FullName = patient.FullName,
             DOB = patient.DOB,
             Gender = patient.Gender,
-            ContactInfo = patient.ContactInfo
+            ContactInfo = patient.ContactInfo,
+            Address = patient.Address,
+            EmergencyContact = patient.EmergencyContact
         };
 
         await _context.Patients.AddAsync(newPatient);
@@ -51,7 +53,7 @@ public class PatientsService(AppDbContext _context) : IPatientsService
         return true;
     }
 
-    public async Task<Patients?> UpdatePatient(Guid id,PatientsDto patient)
+    public async Task<Patients?> UpdatePatient(Guid id,PatientsCreateDto patient)
     {
         var existingPatient = await _context.Patients.FindAsync(id);
         if (existingPatient is null)

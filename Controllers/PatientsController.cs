@@ -29,7 +29,7 @@ namespace Health.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Patients?>> AddPatient(PatientsDto request)
+        public async Task<ActionResult<Patients?>> AddPatient(PatientsCreateDto request)
         {
             var addedPatient = await patientsService.AddPatient(request);
             if (addedPatient == null)
@@ -41,7 +41,7 @@ namespace Health.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult<Patients?>> UpdatePatient(Guid id,PatientsDto patient)
+        public async Task<ActionResult<Patients?>> UpdatePatient(Guid id,PatientsCreateDto patient)
         {
             var updatedPatient = await patientsService.UpdatePatient(id,patient);
             return updatedPatient == null ? BadRequest("Patient not found") : Ok(updatedPatient);

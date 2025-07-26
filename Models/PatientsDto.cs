@@ -28,6 +28,12 @@ namespace Health.Models
         public string Gender { get; set; } = string.Empty;
         [Required]
         public string ContactInfo { get; set; } = string.Empty;
+
+        [Required]
+        public string Address { get; set; } = string.Empty;
+
+        [Required]
+        public string EmergencyContact { get; set; } = string.Empty;
     }
 
 

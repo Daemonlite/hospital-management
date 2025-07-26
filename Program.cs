@@ -43,10 +43,12 @@ Console.WriteLine($"Redis: {builder.Configuration.GetConnectionString("Redis")}"
 
 builder.Services.AddScoped<RedisCacheService>();
 builder.Services.AddScoped<FileUploadService>();
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPatientsService, PatientsService>();
 builder.Services.AddScoped<IPatientFilesService, PatientFileService>();
+
 
 
 

@@ -7,8 +7,8 @@ namespace Health.services
     {
         Task<List<Patients>> GetAllPatients();
         Task<Patients?> GetPatientById(Guid id);
-        Task<Patients?> AddPatient(PatientsDto patient);
-        Task<Patients?> UpdatePatient(Guid id,PatientsDto patient);
+        Task<Patients?> AddPatient(PatientsCreateDto patient);
+        Task<Patients?> UpdatePatient(Guid id,PatientsCreateDto patient);
         Task<bool> DeletePatient(Guid id);
     }
 }
