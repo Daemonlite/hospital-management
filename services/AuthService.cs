@@ -27,7 +27,7 @@ namespace Health.services
                     Id = u.Id,
                     FullName = u.FullName,
                     Email = u.Email,
-                    Role = u.Role,
+                    Role = u.Role.ToString(),
                     CreatedAt = u.CreatedAt,
                     Department = u.Department != null ? new DepartmentDto
                     {
@@ -53,7 +53,7 @@ namespace Health.services
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
-                Role = user.Role,
+                Role = user.Role.ToString(),
                 CreatedAt = user.CreatedAt,
                 Department = user.Department != null ? new DepartmentDto
                 {
@@ -107,7 +107,7 @@ namespace Health.services
                 FullName = request.FullName,
                 Email = request.Email,
                 PasswordHash = new PasswordHasher<User>().HashPassword(new User(), request.Password),
-                Role = request.Role,
+                Role = Enum.Parse<Role>(request.Role),
                 DepartmentId = request.DepartmentId.HasValue ? request.DepartmentId.Value : null
             };
 
@@ -123,9 +123,9 @@ namespace Health.services
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.FullName),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role)
+                    new(ClaimTypes.Name, user.FullName),
+                    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new(ClaimTypes.Role, user.Role.ToString())
                 };
 
                 var key = new SymmetricSecurityKey(

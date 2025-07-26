@@ -18,7 +18,8 @@ namespace Health.Controllers
     [ApiController]
     public class AuthController(IAuthService authservice) : ControllerBase
     {
-        
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UserListDto>> GetUser(Guid id)
         {
@@ -36,6 +37,11 @@ namespace Health.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserListDto>> Register(UserCreateDto request)
         {
+
+            if (!Enum.TryParse(request.Role, ignoreCase: true, out Role role))
+            {
+                return BadRequest("Invalid role passed");
+            }
             var user = await authservice.RegisterAsync(request);
 
             if (user == null)

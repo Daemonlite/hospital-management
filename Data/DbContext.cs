@@ -21,6 +21,10 @@ namespace Health.Data
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict); // Or Cascade as needed
 
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>() // Stores enum as string in DB
+                .HasMaxLength(20);
 
             base.OnModelCreating(modelBuilder);
         }

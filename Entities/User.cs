@@ -11,7 +11,7 @@ namespace Health.Entities
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
 
-        public string Role { get; set; } = string.Empty;
+        public Role Role { get; set; }
 
         // Foreign key relationship
         public Guid? DepartmentId { get; set; }

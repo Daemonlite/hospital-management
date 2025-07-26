@@ -4,6 +4,17 @@ using Health.Entities;
 
 namespace Health.Models
 {
+    
+    public enum Role
+    {
+        Admin,          // System administrator
+        Doctor,         // Medical doctor
+        Nurse,         // Nursing staff
+        Pharmacist,     // Pharmacy staff
+        LabTechnician,  // Laboratory staff
+        Receptionist,   // Front desk/reception
+        // Add more roles as needed
+    }
 
     public class UserCreateDto
     {
@@ -17,8 +28,8 @@ namespace Health.Models
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Role is required")]
-        public string Role { get; set; } = string.Empty;
-        
+        public required string Role { get; set; }
+
         public Guid? DepartmentId { get; set; }
     }
 
@@ -28,7 +39,7 @@ namespace Health.Models
 
         public string Email { get; set; } = string.Empty;
 
-        public string Role { get; set; } = string.Empty;
+        public Role Role { get; set; } 
     }
 
 
