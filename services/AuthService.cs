@@ -16,55 +16,55 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Health.services
 {
-    public class AuthService(AppDbContext context, IConfiguration configuration, RedisCacheService _cache) : IAuthService
+    public class AuthService(AppDbContext context, IConfiguration configuration, RedisCacheService _cache, EmailService mail) : IAuthService
     {
-    public async Task<List<UserListDto>> GetAllUsersAsync()
-    {
-        return await context.Users
-            .Include(u => u.Department)
-            .Select(u => new UserListDto
-            {
-               Id = u.Id,
-               FullName = u.FullName,
-               Email = u.Email,
-               Role = u.Role,
-               CreatedAt = u.CreatedAt,
-               Department = u.Department != null ? new DepartmentDto 
-                { 
-                    Id = u.Department.Id,
-                    Name = u.Department.Name
-                } : null
+        public async Task<List<UserListDto>> GetAllUsersAsync()
+        {
+            return await context.Users
+                .Include(u => u.Department)
+                .Select(u => new UserListDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Role = u.Role,
+                    CreatedAt = u.CreatedAt,
+                    Department = u.Department != null ? new DepartmentDto
+                    {
+                        Id = u.Department.Id,
+                        Name = u.Department.Name
+                    } : null
 
-            })
-            .ToListAsync();
-    }
+                })
+                .ToListAsync();
+        }
 
-    public async Task<UserListDto?> GetUserById(Guid id)
-    {
+        public async Task<UserListDto?> GetUserById(Guid id)
+        {
             var user = await context.Users
                 .Include(u => u.Department)
                 .FirstOrDefaultAsync(u => u.Id == id);
-        if (user is null)
-        {
-            return null;
-        }
-        return new UserListDto
-        {
-            Id = user.Id,
-            FullName = user.FullName,
-            Email = user.Email,
-            Role = user.Role,
-            CreatedAt = user.CreatedAt,
-            Department = user.Department != null ? new DepartmentDto 
-                { 
+            if (user is null)
+            {
+                return null;
+            }
+            return new UserListDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                Department = user.Department != null ? new DepartmentDto
+                {
                     Id = user.Department.Id,
                     Name = user.Department.Name
                 } : null
-            
-        };
-    }
 
-    public async Task<TokenResponseDto?> LoginAsync(UserLoginDto request)
+            };
+        }
+
+        public async Task<TokenResponseDto?> LoginAsync(UserLoginDto request)
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
@@ -95,12 +95,12 @@ namespace Health.services
             }
 
             // Only verify department if DepartmentId is provided
-                if (request.DepartmentId.HasValue &&
-                    !await context.Departments.AnyAsync(d => d.Id == request.DepartmentId))
-                {
-                    throw new ArgumentException("Department does not exist");
-                }
-            
+            if (request.DepartmentId.HasValue &&
+                !await context.Departments.AnyAsync(d => d.Id == request.DepartmentId))
+            {
+                throw new ArgumentException("Department does not exist");
+            }
+
 
             var user = new User
             {
@@ -115,7 +115,6 @@ namespace Health.services
             await context.SaveChangesAsync();
             return await GetUserById(user.Id);
         }
-
 
 
         private string CreateToken(User user)
@@ -155,7 +154,7 @@ namespace Health.services
             return Convert.ToBase64String(randomNumber);
         }
 
-                private async Task<TokenResponseDto> CreateTokenResponse(User user)
+        private async Task<TokenResponseDto> CreateTokenResponse(User user)
         {
             return new TokenResponseDto
             {
@@ -174,8 +173,6 @@ namespace Health.services
 
             return refreshToken;
         }
-
-
 
         private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
         {
@@ -228,7 +225,7 @@ namespace Health.services
             }
             return null;
         }
-        
+
         private static string GenerateOtp()
         {
             var randomNumber = new byte[6];
@@ -244,8 +241,7 @@ namespace Health.services
             {
                 var otp = GenerateOtp();
                 await _cache.CacheSetAsync(request.Email, otp);
-                var sendMail = new EmailService();
-                await sendMail.SendEmailAsync(request.Email, "OTP",$@"
+                await mail.SendEmailAsync(request.Email, "OTP", $@"
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -279,7 +275,7 @@ namespace Health.services
                             <p>© {DateTime.Now.Year} Your Company Name. All rights reserved.</p>
                         </div>
                     </body>
-                    </html>" );
+                    </html>");
                 return true;
 
             }
