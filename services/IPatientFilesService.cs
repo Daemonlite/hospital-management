@@ -9,7 +9,7 @@ namespace Health.services
 
         Task<List<PatientFilesListDto>?> FetchAllFiles();
 
-        Task<PatientsFiles> AddPatientFile(PatientFilesDto patientFile);
+        Task<PatientsFiles?> AddPatientFile(PatientFilesDto patientFile);
 
         Task<bool> DeletePatientFile(Guid id);
 

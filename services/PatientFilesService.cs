@@ -21,6 +21,8 @@ namespace Health.services
                 FilePath = f.FilePath,
                 FileSize = f.FileSize,
                 UploadedAt = f.UploadedAt,
+                ContentType = f.ContentType,
+                FileName = f.FileName,
                 Patient = f.Patient != null ? new Patients
                 {
                     Id = f.Patient.Id,
@@ -54,12 +56,33 @@ namespace Health.services
             })];
         }
 
-        public async Task<PatientsFiles>AddPatientFile(PatientFilesDto patientFile)
+        public async Task<PatientsFiles?> AddPatientFile(PatientFilesDto patientFile)
         {
-            var upload = await fileUploadService.UploadPatientsFileAsync(patientId: patientFile.PatientId, file: patientFile.File, description: patientFile.Description);
-            
+            var patientExists = await context.Patients.AnyAsync(p => p.Id == patientFile.PatientId);
+            if (!patientExists)
+            {
+                throw new ArgumentException("Patient does not exist");
+            }
+            ;
 
-            return upload;
+            var upload = await fileUploadService.UploadPatientsFileAsync(patientId: patientFile.PatientId, file: patientFile.File, uploadLocation: "patients");
+
+            var newFile = new PatientsFiles
+            {
+                Id = Guid.NewGuid(),
+                PatientId = patientFile.PatientId,
+                Description = patientFile.Description,
+                FileName = upload.FileName,
+                FilePath = upload.AbsoluteUrl,
+                ContentType = upload.ContentType,
+                FileSize = upload.FileSize,
+                UploadedAt = DateTime.UtcNow
+            };
+            
+            await context.PatientsFiles.AddAsync(newFile);
+            await context.SaveChangesAsync();
+            return newFile;
+
         }
 
         public async Task<bool> DeletePatientFile(Guid id)

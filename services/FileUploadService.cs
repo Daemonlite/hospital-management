@@ -8,15 +8,15 @@ using Health.services;
 
 namespace Health.services
 {
-    public class FileUploadService(AppDbContext _context, IWebHostEnvironment _env, IConfiguration configuration)
+    public class FileUploadService(IWebHostEnvironment _env, IConfiguration configuration)
     {
-        public async Task<PatientsFiles> UploadPatientsFileAsync(Guid patientId, IFormFile file, string description)
+        public async Task<FinalUploadDto> UploadPatientsFileAsync(Guid patientId, IFormFile file,string uploadLocation)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("Invalid file");
 
-            var user = await _context.Patients.FindAsync(patientId) ?? throw new Exception("Patient not found");
-            var uploadsPath = Path.Combine(_env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot"), "uploads", "patients", patientId.ToString());
+
+            var uploadsPath = Path.Combine(_env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot"), "uploads", $"{uploadLocation}", patientId.ToString());
 
             if (!Directory.Exists(uploadsPath))
                 Directory.CreateDirectory(uploadsPath);
@@ -35,20 +35,7 @@ namespace Health.services
             // Create absolute URL
             var absoluteUrl = $"{baseUrl}/uploads/patients/{patientId}/{fileName}";
 
-            var patientsFile = new PatientsFiles
-            {
-                PatientId = user.Id,
-                FileName = file.FileName,
-                FilePath = absoluteUrl, // Store absolute URL instead of relative path
-                ContentType = file.ContentType,
-                FileSize = file.Length,
-                Description = description
-            };
-
-            _context.PatientsFiles.Add(patientsFile);
-            await _context.SaveChangesAsync();
-
-            return patientsFile;
+            return new FinalUploadDto { AbsoluteUrl = absoluteUrl, ContentType = file.ContentType, FileSize = (int)file.Length, FileName = fileName };
         }
     }
 }

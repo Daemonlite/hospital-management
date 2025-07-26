@@ -34,7 +34,7 @@ namespace Health.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<PatientsFiles>> AddPatientFile(PatientFilesDto patientFile)
+        public async Task<ActionResult<PatientsFiles?>> AddPatientFile(PatientFilesDto patientFile)
         {
             var patientFileAdded = await patientFilesService.AddPatientFile(patientFile);
             return Ok(patientFileAdded);
