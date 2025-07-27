@@ -11,6 +11,8 @@ namespace Health.Data
         
         public DbSet<PatientsFiles> PatientsFiles { get; set; }
 
+        public DbSet<Shift> Shifts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // User-Department relationship
