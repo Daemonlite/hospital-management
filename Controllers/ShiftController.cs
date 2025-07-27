@@ -29,7 +29,7 @@ namespace Health.Controllers
             return shift == null ? NotFound(new { error = "Shift not found" }) : Ok(shift);
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("user/{userId}/date/{date}")]
         [Authorize]
         public async Task<ActionResult<List<ShiftDto>>> GetAvailableSlotsByUserIdAsync(Guid userId, DateTime date)
         {
