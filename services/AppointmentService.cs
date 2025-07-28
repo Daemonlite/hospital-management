@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Health.services
 {
-    public class AppointmentService(AppDbContext context) : IAppointmentService
+    public class AppointmentService(AppDbContext context, EmailService emailService) : IAppointmentService
     {
         public async Task<List<AppointmentDto>> GetAppointments()
         {
@@ -118,6 +118,11 @@ namespace Health.services
             // Save changes
             context.Appointments.Add(appointment);
             await context.SaveChangesAsync();
+
+            //send confirmation email to patient
+            await emailService.SendEmailAsync(patient.ContactInfo, "Appointment Confirmation", $"Your appointment with {doctor.FullName} has been confirmed for {shift.StartTime} - {shift.EndTime}. Kindly be on time to avoid any inconvenience.");
+            //send confirmation email to doctor
+            await emailService.SendEmailAsync(doctor.Email, "Appointment Confirmation", $"Your appointment with {patient.FullName} has been confirmed for {shift.StartTime} - {shift.EndTime}.Kindly Take care of your patient.");
 
             return appointmentDto;
         }
