@@ -88,16 +88,35 @@ namespace Health.services
 
         public async Task<CreateAppointmentDto> CreateAppointment(CreateAppointmentDto appointmentDto)
         {
-            var shift = await context.Shifts.FindAsync(appointmentDto.AppointmentDateId) ?? throw new ArgumentException("Shift not found");
+            // Validate input
+            if (appointmentDto == null)
+                throw new ArgumentNullException(nameof(appointmentDto));
+
+            // Find related entities
+            var patient = await context.Patients.FindAsync(appointmentDto.PatientId);
+            var doctor = await context.Users.FindAsync(appointmentDto.DoctorId);
+            var shift = await context.Shifts.FindAsync(appointmentDto.AppointmentDateId);
+
+            // Validate existence
+            if (patient == null) throw new ArgumentException("Patient not found");
+            if (doctor == null) throw new ArgumentException("Doctor not found");
+            if (shift == null) throw new ArgumentException("Shift not found");
+         
+
+            // Create appointment
             var appointment = new Appointment
             {
                 PatientId = appointmentDto.PatientId,
                 DoctorId = appointmentDto.DoctorId,
-                AppointmentDate = await context.Shifts.FindAsync(appointmentDto.AppointmentDateId),
+                AppointmentDate = shift,  // Use ID instead of navigation property
+                ShiftId = shift.Id
             };
 
-            context.Appointments.Add(appointment);
+            // Update shift status
             shift.IsBooked = true;
+
+            // Save changes
+            context.Appointments.Add(appointment);
             await context.SaveChangesAsync();
 
             return appointmentDto;

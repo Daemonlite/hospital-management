@@ -73,6 +73,8 @@ namespace Health.Controllers
                 return BadRequest(new { error = "Shift not found" });
             }
 
+            if (shift.IsBooked) return BadRequest(new { error = "Shift is already booked" });
+
             if (shift.UserId != appointment.DoctorId && shift.IsBooked == true)
             {
                 return BadRequest(new { error = "Shift is already booked" });
@@ -80,7 +82,7 @@ namespace Health.Controllers
 
 
             var newAppointment = await _appointment.CreateAppointment(appointment);
-            
+
             return Ok(newAppointment);
         }
 
