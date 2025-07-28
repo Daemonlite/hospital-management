@@ -6,14 +6,20 @@ namespace Health.Models
         public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
 
-        public DateOnly DOB { get; set; }
+        // public DateOnly DOB { get; set; }
 
-        public string Gender { get; set; } = string.Empty;
-        public string ContactInfo { get; set; } = string.Empty;
+        // public string Gender { get; set; } = string.Empty;
+        // public string ContactInfo { get; set; } = string.Empty;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        // public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        // public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    public class MinorPatientDto
+    {
+        public Guid Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
     }
 
     public class PatientsCreateDto

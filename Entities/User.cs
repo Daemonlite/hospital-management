@@ -26,5 +26,8 @@ namespace Health.Entities
         public DateTime RefreshTokenExpiryTime { get; set; }
 
         public List<PatientsFiles> Files { get; set; } = [];
+
+        public List<Appointment> Appointments { get; set; } = []; // Navigation property>
+
     }
 }

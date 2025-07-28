@@ -46,7 +46,7 @@ namespace Health.services
                     Notes = s.Notes
                 })
                 .ToListAsync() ?? [];
-        }
+        } 
 
         public async Task<List<ShiftDto>> GetAvailableSlotsByUserId(Guid userId, DateTime date)
         {

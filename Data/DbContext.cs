@@ -13,6 +13,8 @@ namespace Health.Data
 
         public DbSet<Shift> Shifts { get; set; }
 
+        public DbSet<Appointment> Appointments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // User-Department relationship
@@ -27,6 +29,21 @@ namespace Health.Data
                 .Property(u => u.Role)
                 .HasConversion<string>() // Stores enum as string in DB
                 .HasMaxLength(20);
+
+            // doctor, patient appointment relationship
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Patient)
+                .WithMany(p => p.Appointments)
+                .HasForeignKey(a => a.PatientId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Doctor)
+                .WithMany(d => d.Appointments)
+                .HasForeignKey(a => a.DoctorId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

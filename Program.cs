@@ -49,6 +49,7 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPatientsService, PatientsService>();
 builder.Services.AddScoped<IPatientFilesService, PatientFileService>();
 builder.Services.AddScoped<IShiftService, ShiftServices>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 
 

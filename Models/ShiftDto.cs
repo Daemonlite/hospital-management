@@ -19,7 +19,7 @@ namespace Health.Models
         public string? Notes { get; set; }
 
         [Required(ErrorMessage = "Recurrence is required")]
-        public string? Recurrence { get; set; } 
+        public string? Recurrence { get; set; }
     }
 
     // For displaying shifts
@@ -34,5 +34,12 @@ namespace Health.Models
         public bool IsAvailable => !IsBooked;
         public bool IsBooked { get; set; }
         public string? Notes { get; set; }
+    }
+
+    public class ShiftResponseDto
+    {
+        public Guid? Id { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }
