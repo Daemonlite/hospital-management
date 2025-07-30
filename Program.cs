@@ -7,6 +7,7 @@ using Health.services;
 using Health.Data;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 // Add services to the container.
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IPatientsService, PatientsService>();
 builder.Services.AddScoped<IPatientFilesService, PatientFileService>();
 builder.Services.AddScoped<IShiftService, ShiftServices>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
 
 
 
@@ -84,6 +86,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 // Authentication & Authorization middleware
 app.UseAuthentication();

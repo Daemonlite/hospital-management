@@ -29,5 +29,6 @@ namespace Health.Entities
 
         public List<Appointment> Appointments { get; set; } = []; // Navigation property>
 
+
     }
 }

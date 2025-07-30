@@ -19,6 +19,7 @@ namespace Health.Entities
 
         public List<Appointment> Appointments { get; set; } = []; // Navigation property>
 
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
