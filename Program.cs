@@ -52,6 +52,7 @@ builder.Services.AddScoped<IPatientFilesService, PatientFileService>();
 builder.Services.AddScoped<IShiftService, ShiftServices>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
+builder.Services.AddScoped<IRecordsService, RecordsService>();
 
 
 

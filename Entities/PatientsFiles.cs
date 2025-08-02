@@ -10,6 +10,8 @@ namespace Health.Entities
         [ForeignKey("PatientId")]                         
         public Patients? Patient { get; set; }
 
+        
+
         public string Description { get; set; } = string.Empty;           
         public string FileName { get; set; } = string.Empty;
         public string FilePath { get; set; } = string.Empty;

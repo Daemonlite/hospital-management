@@ -17,6 +17,8 @@ namespace Health.Data
 
         public DbSet<Prescriptions> Prescriptions { get; set; }
 
+        public DbSet<Records> Records { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // User-Department relationship
